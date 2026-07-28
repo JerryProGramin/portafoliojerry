@@ -1,0 +1,18 @@
+{
+    "name": "portafolio-jerry",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "alpinejs": "^3.14.9",
+        "glightbox": "^3.3.1",
+        "gsap": "^3.13.0"
+    },
+    "devDependencies": {
+        "vite": "^7.0.0"
+    }
+}

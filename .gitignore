@@ -1,0 +1,12 @@
+/.env
+/vendor/
+/node_modules/
+/public/build/
+/public/uploads/*
+!/public/uploads/.gitkeep
+/storage/cache/*
+!/storage/cache/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+/.phpunit.cache/
+npm-debug.log*

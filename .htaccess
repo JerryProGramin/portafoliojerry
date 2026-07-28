@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# Base del proyecto
+RewriteBase /portafoliojerry/
+
+# Si existe el archivo o carpeta, sirve normal
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Todo lo demás al front controller (raíz)
+RewriteRule ^ index.php [L]
