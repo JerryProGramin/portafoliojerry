@@ -37,12 +37,6 @@
                     <span class="title">Inicio</span>
                 </a>
             </li>
-            <li data-section="stack">
-                <a href="#stack" aria-label="Stack técnico">
-                    <span class="icon"><i class="fa-solid fa-code"></i></span>
-                    <span class="title">Stack</span>
-                </a>
-            </li>
             <li data-section="proyectos">
                 <a href="#proyectos" aria-label="Proyectos">
                     <span class="icon"><i class="fa-regular fa-folder-open"></i></span>

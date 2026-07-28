@@ -117,8 +117,12 @@ const sectionObserver = new IntersectionObserver(
 
         if (!visible) return;
 
+        const activeSection = visible.target.id === "stack"
+            ? "inicio"
+            : visible.target.id;
+
         navigationItems.forEach((item) => {
-            item.classList.toggle("active", item.dataset.section === visible.target.id);
+            item.classList.toggle("active", item.dataset.section === activeSection);
         });
     },
     { rootMargin: "-20% 0px -55% 0px", threshold: [0.1, 0.25, 0.5] }

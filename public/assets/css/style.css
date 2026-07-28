@@ -642,6 +642,10 @@ p {
         place-items: center;
     }
 
+    .intro-screen {
+        min-height: calc(100svh - 28px);
+    }
+
     .avatar {
         width: 130px;
         height: 130px;
@@ -668,6 +672,10 @@ p {
 .stack-section {
     margin-top: 26px;
     padding-top: 6px;
+}
+
+.intro-screen {
+    min-height: calc(100vh - 56px);
 }
 
 .one-page-section > .page {

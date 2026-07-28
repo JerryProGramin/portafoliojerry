@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="page">
+    <div class="intro-screen">
     <section class="hero-min" id="inicio">
         <div class="hero-text">
             <p class="kicker">Backend | Web Developer</p>
@@ -51,6 +52,7 @@
             @endforelse
         </div>
     </section>
+    </div>
 
     <section id="proyectos" class="one-page-section reveal">
         <h2>Proyectos</h2>
