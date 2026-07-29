@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS projects (
     subtitle VARCHAR(200) NULL,
     summary TEXT NOT NULL,
     description LONGTEXT NULL,
+    project_type VARCHAR(50) NOT NULL DEFAULT 'Full Stack',
     status ENUM('draft', 'published', 'archived') NOT NULL DEFAULT 'draft',
     featured BOOLEAN NOT NULL DEFAULT FALSE,
     sort_order INT NOT NULL DEFAULT 0,
@@ -30,6 +31,28 @@ CREATE TABLE IF NOT EXISTS projects (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_projects_public (status, featured, sort_order)
 );
+
+CREATE TABLE IF NOT EXISTS project_types (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(80) NOT NULL,
+    slug VARCHAR(80) NOT NULL UNIQUE,
+    icon VARCHAR(100) NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO project_types (name, slug, icon, sort_order)
+VALUES
+    ('Frontend', 'frontend', 'fa-solid fa-display', 1),
+    ('Backend', 'backend', 'fa-solid fa-server', 2),
+    ('App móvil', 'mobile', 'fa-solid fa-mobile-screen', 3),
+    ('Full Stack', 'full-stack', 'fa-solid fa-code', 4)
+ON DUPLICATE KEY UPDATE
+    name = VALUES(name),
+    icon = VALUES(icon),
+    sort_order = VALUES(sort_order);
 
 CREATE TABLE IF NOT EXISTS project_images (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

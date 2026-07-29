@@ -7,98 +7,156 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 window.Alpine = Alpine;
 Alpine.start();
 
-const themeToggle = document.querySelector("#theme-toggle");
-const menuToggle = document.querySelector("#menu-toggle");
-const navigation = document.querySelector("#main-navigation");
+const starfield = document.querySelector("#starfield");
+const starContext = starfield?.getContext("2d");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let stars = [];
+let starAnimationFrame;
 
-function closeMobileMenu() {
-    navigation?.classList.remove("open");
-    menuToggle?.setAttribute("aria-expanded", "false");
-    menuToggle?.setAttribute("aria-label", "Abrir menú");
+function createStars() {
+    if (!starfield || !starContext) return;
 
-    const icon = menuToggle?.querySelector("i");
-    icon?.classList.add("fa-bars");
-    icon?.classList.remove("fa-xmark");
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    starfield.width = Math.floor(width * pixelRatio);
+    starfield.height = Math.floor(height * pixelRatio);
+    starContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+    const amount = Math.min(240, Math.max(80, Math.floor((width * height) / 7500)));
+    stars = Array.from({ length: amount }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 1.35 + 0.3,
+        alpha: Math.random() * 0.65 + 0.2,
+        speed: Math.random() * 0.012 + 0.004,
+        phase: Math.random() * Math.PI * 2,
+        tone: Math.random(),
+    }));
 }
 
-menuToggle?.addEventListener("click", () => {
-    const willOpen = !navigation?.classList.contains("open");
-    navigation?.classList.toggle("open", willOpen);
-    menuToggle.setAttribute("aria-expanded", String(willOpen));
-    menuToggle.setAttribute("aria-label", willOpen ? "Cerrar menú" : "Abrir menú");
-
-    const icon = menuToggle.querySelector("i");
-    icon?.classList.toggle("fa-bars", !willOpen);
-    icon?.classList.toggle("fa-xmark", willOpen);
-});
-
-navigation?.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", closeMobileMenu);
-});
-
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMobileMenu();
-});
-
-document.addEventListener("click", (event) => {
-    if (
-        navigation?.classList.contains("open") &&
-        !navigation.contains(event.target) &&
-        !menuToggle?.contains(event.target)
-    ) {
-        closeMobileMenu();
-    }
-});
-
-function updateThemeButton() {
-    if (!themeToggle) return;
+function drawStars(time = 0) {
+    if (!starfield || !starContext) return;
 
     const isDark = document.documentElement.dataset.theme === "dark";
-    const icon = themeToggle.querySelector("i");
-    icon?.classList.toggle("fa-moon", !isDark);
-    icon?.classList.toggle("fa-sun", isDark);
-    themeToggle.setAttribute(
-        "aria-label",
-        isDark ? "Activar modo claro" : "Activar modo oscuro"
-    );
+    starContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    stars.forEach((star) => {
+        const twinkle = reduceMotion
+            ? star.alpha
+            : star.alpha * (0.68 + Math.sin(time * star.speed + star.phase) * 0.32);
+
+        if (isDark) {
+            starContext.fillStyle = star.tone > 0.72
+                ? `rgba(45, 212, 191, ${twinkle})`
+                : `rgba(224, 247, 255, ${twinkle})`;
+        } else {
+            starContext.fillStyle = star.tone > 0.72
+                ? `rgba(15, 159, 154, ${twinkle * 0.52})`
+                : `rgba(8, 79, 120, ${twinkle * 0.38})`;
+        }
+
+        starContext.beginPath();
+        starContext.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        starContext.fill();
+    });
+
+    if (!reduceMotion) {
+        starAnimationFrame = requestAnimationFrame(drawStars);
+    }
 }
 
-themeToggle?.addEventListener("click", () => {
-    const isDark = document.documentElement.dataset.theme === "dark";
+createStars();
+drawStars();
 
-    if (isDark) {
-        delete document.documentElement.dataset.theme;
-        localStorage.setItem("portfolio-theme", "light");
-    } else {
-        document.documentElement.dataset.theme = "dark";
-        localStorage.setItem("portfolio-theme", "dark");
-    }
-
-    updateThemeButton();
+window.addEventListener("resize", () => {
+    cancelAnimationFrame(starAnimationFrame);
+    createStars();
+    drawStars();
 });
 
-updateThemeButton();
+const themeChoices = document.querySelectorAll("[data-theme-choice]");
 
-const filterButtons = document.querySelectorAll(".filter-button");
-const projectCards = document.querySelectorAll(".project-card");
+function updateThemeButtons() {
+    const isDark = document.documentElement.dataset.theme === "dark";
 
-filterButtons.forEach((button) => {
+    themeChoices.forEach((button) => {
+        const selected = button.dataset.themeChoice === (isDark ? "dark" : "light");
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-pressed", String(selected));
+    });
+}
+
+themeChoices.forEach((button) => {
     button.addEventListener("click", () => {
-        const filter = button.dataset.filter;
+        const theme = button.dataset.themeChoice;
 
-        filterButtons.forEach((item) => {
+        if (theme === "dark") {
+            document.documentElement.dataset.theme = "dark";
+        } else {
+            delete document.documentElement.dataset.theme;
+        }
+
+        localStorage.setItem("portfolio-theme", theme);
+        updateThemeButtons();
+    });
+});
+
+updateThemeButtons();
+
+const typeFilters = document.querySelectorAll(".type-filter");
+const technologyFilters = document.querySelectorAll(".technology-filter");
+const projectCards = document.querySelectorAll(".project-card");
+const projectSearch = document.querySelector("#project-search");
+const projectsEmpty = document.querySelector("#projects-empty");
+let selectedType = "all";
+let selectedTechnology = "all";
+
+function applyProjectFilters() {
+    const search = projectSearch?.value.trim().toLocaleLowerCase("es") ?? "";
+    let visibleCount = 0;
+
+    projectCards.forEach((card) => {
+        const technologies = card.dataset.technologies?.split(" ") ?? [];
+        const matchesType = selectedType === "all" || card.dataset.type === selectedType;
+        const matchesTechnology = selectedTechnology === "all"
+            || technologies.includes(selectedTechnology);
+        const matchesSearch = search === ""
+            || card.dataset.search?.toLocaleLowerCase("es").includes(search);
+        const visible = matchesType && matchesTechnology && matchesSearch;
+
+        card.hidden = !visible;
+        if (visible) visibleCount += 1;
+    });
+
+    if (projectsEmpty) projectsEmpty.hidden = visibleCount !== 0;
+}
+
+typeFilters.forEach((button) => {
+    button.addEventListener("click", () => {
+        selectedType = button.dataset.type ?? "all";
+        typeFilters.forEach((item) => {
             const selected = item === button;
             item.classList.toggle("active", selected);
             item.setAttribute("aria-pressed", String(selected));
         });
-
-        projectCards.forEach((card) => {
-            const technologies = card.dataset.technologies?.split(" ") ?? [];
-            const visible = filter === "all" || technologies.includes(filter);
-            card.hidden = !visible;
-        });
+        applyProjectFilters();
     });
 });
+
+technologyFilters.forEach((button) => {
+    button.addEventListener("click", () => {
+        selectedTechnology = button.dataset.technology ?? "all";
+        technologyFilters.forEach((item) => {
+            const selected = item === button;
+            item.classList.toggle("active", selected);
+            item.setAttribute("aria-pressed", String(selected));
+        });
+        applyProjectFilters();
+    });
+});
+
+projectSearch?.addEventListener("input", applyProjectFilters);
 
 GLightbox({
     selector: ".project-gallery",

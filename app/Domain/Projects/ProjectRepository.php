@@ -7,4 +7,6 @@ namespace App\Domain\Projects;
 interface ProjectRepository
 {
     public function published(): array;
+
+    public function types(): array;
 }

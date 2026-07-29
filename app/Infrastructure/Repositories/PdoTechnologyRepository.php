@@ -33,13 +33,11 @@ final class PdoTechnologyRepository implements TechnologyRepository
     public function projectFilters(): array
     {
         $statement = $this->pdo->query(
-            "SELECT DISTINCT t.name, t.slug, t.icon, t.sort_order
+            "SELECT t.name, t.slug, t.icon, t.category, t.category_order, t.sort_order
              FROM technologies t
-             INNER JOIN project_technologies pt ON pt.technology_id = t.id
-             INNER JOIN projects p ON p.id = pt.project_id
              WHERE t.is_visible = 1
-               AND p.status = 'published'
-             ORDER BY t.sort_order ASC, t.name ASC"
+               AND t.category IN ('Lenguajes', 'Frameworks y librerías', 'Bases de datos')
+             ORDER BY t.category_order ASC, t.sort_order ASC, t.name ASC"
         );
 
         return $statement->fetchAll();

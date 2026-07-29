@@ -55,51 +55,98 @@
     </div>
 
     <section id="proyectos" class="one-page-section reveal">
-        <h2>Proyectos</h2>
-        <p class="lead">Una selección de soluciones enfocadas en automatización y gestión de información.</p>
+        <div class="projects-heading">
+            <p class="kicker">Trabajo seleccionado</p>
+            <h2>Mis proyectos</h2>
+            <p class="lead">Explora mis trabajos por tipo de desarrollo y tecnología.</p>
+        </div>
 
-        @if(!empty($projectFilters))
-            <div class="project-filters" role="group" aria-label="Filtrar proyectos por tecnología">
-                <button class="filter-button active" type="button" data-filter="all" aria-pressed="true">
-                    <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-                    Todos
+        @if(!empty($projectTypes))
+            <div class="type-filters" role="group" aria-label="Filtrar proyectos por tipo">
+                <button class="type-filter active" type="button" data-type="all" aria-pressed="true">
+                    <i class="fa-solid fa-layer-group" aria-hidden="true"></i> Todos
                 </button>
+                @foreach($projectTypes as $type)
+                    <button class="type-filter" type="button" data-type="{{ $type['slug'] }}" aria-pressed="false">
+                        @if(!empty($type['icon']))
+                            <i class="{{ $type['icon'] }}" aria-hidden="true"></i>
+                        @endif
+                        {{ $type['name'] }}
+                    </button>
+                @endforeach
+            </div>
+        @endif
+
+        <div class="projects-layout">
+            <aside class="project-filter-panel">
+                <h3>Filtrar por tecnología</h3>
+                <label class="filter-search">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <span class="sr-only">Buscar proyecto o tecnología</span>
+                    <input id="project-search" type="search" placeholder="Buscar...">
+                </label>
+
+                <button class="technology-filter active" type="button" data-technology="all" aria-pressed="true">
+                    Todas las tecnologías
+                </button>
+
                 @foreach($projectFilters as $filter)
-                    <button class="filter-button" type="button" data-filter="{{ $filter['slug'] }}" aria-pressed="false">
+                    @if($loop->first || $projectFilters[$loop->index - 1]['category'] !== $filter['category'])
+                        <p class="filter-category">{{ $filter['category'] }}</p>
+                    @endif
+                    <button class="technology-filter" type="button" data-technology="{{ $filter['slug'] }}" aria-pressed="false">
                         @if(!empty($filter['icon']))
                             <i class="{{ $filter['icon'] }}" aria-hidden="true"></i>
                         @endif
                         {{ $filter['name'] }}
                     </button>
                 @endforeach
-            </div>
-        @endif
+            </aside>
 
-        <div class="grid project-grid">
-            @forelse($projects as $project)
-                <article class="card project-card" data-technologies="{{ $project['technology_slugs'] }}">
-                    <div class="card-title">
-                        <div>
-                            <h3>{{ $project['title'] }}</h3>
-                            @if(!empty($project['subtitle']))
-                                <p>{{ $project['subtitle'] }}</p>
-                            @endif
+            <div class="project-grid">
+                @forelse($projects as $project)
+                    <article
+                        class="project-card"
+                        data-type="{{ strtolower($project['project_type']) }}"
+                        data-technologies="{{ $project['technology_slugs'] }}"
+                        data-search="{{ strtolower($project['title'] . ' ' . $project['summary'] . ' ' . $project['technology_slugs']) }}"
+                    >
+                        <div class="project-cover">
+                            <i class="fa-solid fa-code" aria-hidden="true"></i>
                         </div>
-                        <span class="badge">{{ ucfirst($project['status']) }}</span>
-                    </div>
-                    <p style="margin:10px 0 14px">{{ $project['summary'] }}</p>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap">
-                        @if(!empty($project['demo_url']))
-                            <a class="btn btn-primary" href="{{ $project['demo_url'] }}" target="_blank" rel="noopener">Demo</a>
-                        @endif
-                        @if(!empty($project['repository_url']))
-                            <a class="btn" href="{{ $project['repository_url'] }}" target="_blank" rel="noopener">Código</a>
-                        @endif
-                    </div>
-                </article>
-            @empty
-                <article class="card"><p>Aún no hay proyectos publicados.</p></article>
-            @endforelse
+                        <div class="project-content">
+                            <span class="project-type">{{ $project['project_type'] }}</span>
+                            <h3>{{ $project['title'] }}</h3>
+                            <p>{{ $project['summary'] }}</p>
+                            <div class="project-technologies">
+                                @foreach($project['technologies'] as $technology)
+                                    <span>
+                                        @if(!empty($technology['icon']))
+                                            <i class="{{ $technology['icon'] }}" aria-hidden="true"></i>
+                                        @endif
+                                        {{ $technology['name'] }}
+                                    </span>
+                                @endforeach
+                            </div>
+                            <div class="project-actions">
+                                @if(!empty($project['repository_url']))
+                                    <a class="btn" href="{{ $project['repository_url'] }}" target="_blank" rel="noopener">
+                                        <i class="fa-brands fa-github"></i> Código
+                                    </a>
+                                @endif
+                                @if(!empty($project['demo_url']))
+                                    <a class="btn btn-primary" href="{{ $project['demo_url'] }}" target="_blank" rel="noopener">
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Demo
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </article>
+                @empty
+                    <article class="project-card"><p>Aún no hay proyectos publicados.</p></article>
+                @endforelse
+                <p class="projects-empty" id="projects-empty" hidden>No hay proyectos para este filtro.</p>
+            </div>
         </div>
     </section>
 

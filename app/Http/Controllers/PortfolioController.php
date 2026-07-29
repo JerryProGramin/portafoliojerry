@@ -20,9 +20,11 @@ final class PortfolioController
 
     public function index(): void
     {
+        $projects = $this->projects->published();
         $this->view->render('portfolio.index', [
             'title' => 'Inicio',
-            'projects' => $this->projects->published(),
+            'projects' => $projects,
+            'projectTypes' => $this->projects->types(),
             'technologyGroups' => $this->technologies->groupedByCategory(),
             'projectFilters' => $this->technologies->projectFilters(),
             'flash' => $_SESSION['flash'] ?? null,

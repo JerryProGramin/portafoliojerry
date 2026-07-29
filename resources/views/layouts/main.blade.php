@@ -21,13 +21,34 @@
     {!! vite_tags('resources/js/app.js') !!}
 </head>
 <body>
-    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Abrir menú" aria-controls="main-navigation" aria-expanded="false">
-        <i class="fa-solid fa-bars" aria-hidden="true"></i>
-    </button>
+    <canvas class="starfield" id="starfield" aria-hidden="true"></canvas>
 
-    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Activar modo oscuro" title="Cambiar tema">
-        <i class="fa-regular fa-moon" aria-hidden="true"></i>
-    </button>
+    <header class="site-header">
+        <a class="brand" href="#inicio">Portafolio</a>
+        <div class="header-socials" aria-label="Redes profesionales">
+            <a href="https://github.com/JerryProGramin" target="_blank" rel="noopener" aria-label="GitHub">
+                <i class="fa-brands fa-github" aria-hidden="true"></i>
+            </a>
+            @if(!empty($contact['linkedin']))
+                <a href="{{ $contact['linkedin'] }}" target="_blank" rel="noopener" aria-label="LinkedIn">
+                    <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+                </a>
+            @else
+                <span class="social-disabled" aria-label="LinkedIn pendiente de configurar" title="LinkedIn pendiente de configurar">
+                    <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+                </span>
+            @endif
+        </div>
+    </header>
+
+    <div class="theme-switch" role="group" aria-label="Seleccionar tema">
+        <button type="button" data-theme-choice="light" aria-label="Activar modo claro" title="Modo claro">
+            <i class="fa-regular fa-sun" aria-hidden="true"></i>
+        </button>
+        <button type="button" data-theme-choice="dark" aria-label="Activar modo oscuro" title="Modo oscuro">
+            <i class="fa-regular fa-moon" aria-hidden="true"></i>
+        </button>
+    </div>
 
     <nav class="navigation" id="main-navigation" aria-label="Navegación principal">
         <ul>
