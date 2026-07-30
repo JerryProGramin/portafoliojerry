@@ -14,17 +14,17 @@
     --bg: #f4f9fc;
     --panel: rgba(248, 252, 255, .88);
     --card: rgba(248, 252, 255, .91);
-    --surface: rgba(226, 241, 248, .76);
-    --surface-hover: rgba(207, 235, 246, .88);
+    --surface: rgba(240, 232, 255, .76);
+    --surface-hover: rgba(230, 218, 252, .90);
 
-    --text: #102a43;
-    --muted: #5f7489;
-    --border: rgba(20, 79, 104, .16);
+    --text: #24133d;
+    --muted: #665875;
+    --border: rgba(99, 64, 140, .20);
 
-    --accent: #087ea4;
-    --accent-2: #0f9f9a;
-    --accent-3: #7157c8;
-    --accent-soft: rgba(8, 126, 164, .11);
+    --accent: #6d28d9;
+    --accent-2: #c026d3;
+    --accent-3: #0f9f9a;
+    --accent-soft: rgba(109, 40, 217, .12);
 
     --shadow: 0 22px 60px rgba(8, 35, 58, .18);
     --radius: 18px;
@@ -40,11 +40,11 @@ html[data-theme="dark"] {
     --surface-hover: rgba(28, 65, 88, .88);
     --text: #edf8fc;
     --muted: #a8becb;
-    --border: rgba(154, 211, 224, .16);
-    --accent: #38bdf8;
-    --accent-2: #2dd4bf;
-    --accent-3: #a78bfa;
-    --accent-soft: rgba(56, 189, 248, .12);
+    --border: rgba(196, 181, 253, .20);
+    --accent: #c084fc;
+    --accent-2: #f472b6;
+    --accent-3: #2dd4bf;
+    --accent-soft: rgba(192, 132, 252, .14);
     --shadow: 0 24px 65px rgba(0, 8, 18, .38);
 }
 
@@ -65,8 +65,8 @@ body {
 html {
     scroll-behavior: smooth;
     background:
-        linear-gradient(rgba(235, 246, 251, .58), rgba(235, 246, 251, .58)),
-        url("../img/universe-portfolio.png") center / cover no-repeat;
+        linear-gradient(rgba(247, 251, 255, .12), rgba(247, 251, 255, .12)),
+        url("../img/universe-day.png") center / cover no-repeat;
     background-attachment: fixed;
 }
 
@@ -92,7 +92,7 @@ a {
 }
 
 ::selection {
-    background: rgba(45, 212, 191, .28);
+    background: rgba(244, 114, 182, .30);
 }
 
 /* =========================================================
@@ -275,7 +275,7 @@ p {
     font-size: 12px;
     padding: 6px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(8, 126, 164, .24);
+    border: 1px solid rgba(109, 40, 217, .28);
     background: var(--accent-soft);
     color: var(--accent);
 }
@@ -327,6 +327,12 @@ p {
     width: 100%;
     height: 100%;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity .35s ease;
+}
+
+html[data-theme="dark"] .starfield {
+    opacity: 1;
 }
 
 main {
@@ -341,7 +347,7 @@ main {
 .chip:hover,
 .skill:hover {
     transform: translateY(-1px);
-    border-color: rgba(15, 159, 154, .38);
+    border-color: rgba(192, 38, 211, .42);
     background: var(--surface-hover);
 }
 
@@ -364,7 +370,7 @@ main {
 
 .btn:hover {
     transform: translateY(-1px);
-    border-color: rgba(15, 159, 154, .38);
+    border-color: rgba(192, 38, 211, .42);
     background: var(--surface-hover);
 }
 
@@ -401,8 +407,19 @@ main {
 
 .contact-link:hover {
     transform: translateY(-3px);
-    border-color: rgba(15, 159, 154, .42);
+    border-color: rgba(192, 38, 211, .44);
     background: var(--surface-hover);
+}
+
+.contact-link.is-disabled {
+    cursor: not-allowed;
+    opacity: .58;
+}
+
+.contact-link.is-disabled:hover {
+    transform: none;
+    border-color: var(--border);
+    background: var(--surface);
 }
 
 .contact-icon {
@@ -584,21 +601,25 @@ main {
 
 .theme-switch {
     position: fixed;
-    top: 18px;
-    right: 18px;
+    top: auto;
+    right: auto;
+    bottom: 18px;
+    left: 18px;
     z-index: 10000;
-    display: flex;
-    gap: 3px;
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
     padding: 4px;
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: 50%;
     background: var(--panel);
     box-shadow: var(--shadow);
     backdrop-filter: blur(18px) saturate(130%);
 }
 
 .theme-switch button {
-    display: grid;
+    display: none;
     width: 38px;
     height: 38px;
     place-items: center;
@@ -617,6 +638,7 @@ main {
 }
 
 .theme-switch button.active {
+    display: grid;
     background: var(--accent);
     color: #ffffff;
 }
@@ -645,11 +667,12 @@ main {
         top: auto;
         right: auto;
         bottom: 18px;
-        left: 50%;
+        left: calc(50% - 28px);
         width: auto;
         padding: 6px 8px;
         transform: translateX(-50%);
-        border-radius: 20px;
+        border-right: 0;
+        border-radius: 20px 0 0 20px;
     }
 
     .navigation ul {
@@ -676,6 +699,35 @@ main {
 
     .navigation .icon i {
         font-size: 1.35rem;
+    }
+
+    .theme-switch {
+        top: auto;
+        right: auto;
+        bottom: 18px;
+        left: calc(50% + 69px);
+        width: 56px;
+        height: 66px;
+        min-height: 66px;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
+        border: 1px solid var(--border);
+        border-left: 0;
+        border-radius: 0 20px 20px 0;
+        background: var(--panel);
+        box-shadow: 12px 12px 30px rgba(0, 0, 0, .18);
+        backdrop-filter: blur(18px) saturate(130%);
+    }
+
+    .theme-switch button {
+        display: none;
+        width: 40px;
+        height: 40px;
+    }
+
+    .theme-switch button.active {
+        display: grid;
     }
 
     .intro-screen {
@@ -782,7 +834,7 @@ main {
     height: 70px;
     align-items: center;
     justify-content: space-between;
-    padding: 0 112px 0 28px;
+    padding: 0 28px;
     border-bottom: 1px solid var(--border);
     background: color-mix(in srgb, var(--panel) 92%, transparent);
     backdrop-filter: blur(20px) saturate(135%);
@@ -961,7 +1013,7 @@ main {
 
 .project-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(15, 159, 154, .42);
+    border-color: rgba(192, 132, 252, .52);
 }
 
 .project-cover {
@@ -969,11 +1021,11 @@ main {
     min-height: 118px;
     place-items: center;
     background:
-        radial-gradient(circle at 75% 20%, rgba(45, 212, 191, .30), transparent 34%),
-        linear-gradient(135deg, rgba(8, 126, 164, .32), rgba(113, 87, 200, .36));
+        radial-gradient(circle at 75% 20%, rgba(244, 114, 182, .34), transparent 34%),
+        linear-gradient(135deg, rgba(109, 40, 217, .54), rgba(67, 32, 116, .66));
     color: #ffffff;
     font-size: 34px;
-    text-shadow: 0 0 24px rgba(56, 189, 248, .85);
+    text-shadow: 0 0 24px rgba(192, 132, 252, .90);
 }
 
 .project-content {
@@ -1051,7 +1103,7 @@ main {
 @media (max-width: 700px) {
     .site-header {
         height: 64px;
-        padding: 0 108px 0 18px;
+        padding: 0 18px;
     }
 
     main {

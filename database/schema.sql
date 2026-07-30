@@ -43,6 +43,27 @@ CREATE TABLE IF NOT EXISTS project_types (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS social_links (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(80) NOT NULL,
+    slug VARCHAR(80) NOT NULL UNIQUE,
+    url VARCHAR(500) NULL,
+    icon VARCHAR(100) NOT NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO social_links (name, slug, url, icon, sort_order)
+VALUES
+    ('GitHub', 'github', 'https://github.com/JerryProGramin', 'fa-brands fa-github', 1),
+    ('LinkedIn', 'linkedin', NULL, 'fa-brands fa-linkedin-in', 2)
+ON DUPLICATE KEY UPDATE
+    name = VALUES(name),
+    icon = VALUES(icon),
+    sort_order = VALUES(sort_order);
+
 INSERT INTO project_types (name, slug, icon, sort_order)
 VALUES
     ('Frontend', 'frontend', 'fa-solid fa-display', 1),

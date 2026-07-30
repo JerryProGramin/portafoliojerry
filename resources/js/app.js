@@ -89,7 +89,9 @@ function updateThemeButtons() {
 
 themeChoices.forEach((button) => {
     button.addEventListener("click", () => {
-        const theme = button.dataset.themeChoice;
+        const theme = document.documentElement.dataset.theme === "dark"
+            ? "light"
+            : "dark";
 
         if (theme === "dark") {
             document.documentElement.dataset.theme = "dark";
@@ -167,26 +169,31 @@ GLightbox({
 const navigationItems = document.querySelectorAll(".navigation li[data-section]");
 const sections = document.querySelectorAll("section[id]");
 
-const sectionObserver = new IntersectionObserver(
-    (entries) => {
-        const visible = entries
-            .filter((entry) => entry.isIntersecting)
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+function updateActiveNavigation() {
+    const documentBottom = window.scrollY + window.innerHeight;
+    const isAtBottom = documentBottom >= document.documentElement.scrollHeight - 8;
+    let activeSection = "inicio";
 
-        if (!visible) return;
+    if (isAtBottom) {
+        activeSection = "contacto";
+    } else {
+        const referenceLine = window.scrollY + window.innerHeight * 0.42;
 
-        const activeSection = visible.target.id === "stack"
-            ? "inicio"
-            : visible.target.id;
-
-        navigationItems.forEach((item) => {
-            item.classList.toggle("active", item.dataset.section === activeSection);
+        sections.forEach((section) => {
+            if (section.offsetTop <= referenceLine) {
+                activeSection = section.id === "stack" ? "inicio" : section.id;
+            }
         });
-    },
-    { rootMargin: "-20% 0px -55% 0px", threshold: [0.1, 0.25, 0.5] }
-);
+    }
 
-sections.forEach((section) => sectionObserver.observe(section));
+    navigationItems.forEach((item) => {
+        item.classList.toggle("active", item.dataset.section === activeSection);
+    });
+}
+
+window.addEventListener("scroll", updateActiveNavigation, { passive: true });
+window.addEventListener("resize", updateActiveNavigation);
+updateActiveNavigation();
 
 if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     gsap.registerPlugin(ScrollTrigger);

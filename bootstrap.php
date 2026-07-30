@@ -7,6 +7,7 @@ use App\Core\View;
 use App\Http\Controllers\PortfolioController;
 use App\Infrastructure\Database\Connection;
 use App\Infrastructure\Repositories\PdoProjectRepository;
+use App\Infrastructure\Repositories\PdoSocialLinkRepository;
 use App\Infrastructure\Repositories\PdoTechnologyRepository;
 use Dotenv\Dotenv;
 
@@ -31,9 +32,11 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 $connection = Connection::create();
 $projectRepository = new PdoProjectRepository($connection);
 $technologyRepository = new PdoTechnologyRepository($connection);
+$socialLinkRepository = new PdoSocialLinkRepository($connection);
 $portfolioController = new PortfolioController(
     $projectRepository,
     $technologyRepository,
+    $socialLinkRepository,
     new View()
 );
 $routes = require __DIR__ . '/routes/web.php';

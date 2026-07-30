@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Core\View;
 use App\Domain\Projects\ProjectRepository;
+use App\Domain\Social\SocialLinkRepository;
 use App\Domain\Technologies\TechnologyRepository;
 use App\Support\Config;
 
@@ -14,6 +15,7 @@ final class PortfolioController
     public function __construct(
         private ProjectRepository $projects,
         private TechnologyRepository $technologies,
+        private SocialLinkRepository $socialLinks,
         private View $view
     ) {
     }
@@ -27,10 +29,10 @@ final class PortfolioController
             'projectTypes' => $this->projects->types(),
             'technologyGroups' => $this->technologies->groupedByCategory(),
             'projectFilters' => $this->technologies->projectFilters(),
+            'socialLinks' => $this->socialLinks->visible(),
             'flash' => $_SESSION['flash'] ?? null,
             'contact' => [
                 'email' => Config::string('CONTACT_TO_EMAIL'),
-                'linkedin' => Config::string('CONTACT_LINKEDIN_URL'),
                 'whatsapp' => preg_replace(
                     '/\D+/',
                     '',

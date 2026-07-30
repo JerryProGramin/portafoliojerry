@@ -161,12 +161,19 @@
                         <strong>{{ $contact['email'] }}</strong>
                     </span>
                 </a>
-                @if(!empty($contact['linkedin']))
-                    <a class="contact-link" href="{{ $contact['linkedin'] }}" target="_blank" rel="noopener">
-                        <span class="contact-icon"><i class="fa-brands fa-linkedin-in"></i></span>
-                        <span><small>LinkedIn</small><strong>Ver perfil profesional</strong></span>
-                    </a>
-                @endif
+                @foreach($socialLinks as $social)
+                    @if(!empty($social['url']))
+                        <a class="contact-link" href="{{ $social['url'] }}" target="_blank" rel="noopener">
+                            <span class="contact-icon"><i class="{{ $social['icon'] }}"></i></span>
+                            <span><small>{{ $social['name'] }}</small><strong>Ver perfil profesional</strong></span>
+                        </a>
+                    @else
+                        <span class="contact-link is-disabled" aria-label="{{ $social['name'] }} pendiente de configurar">
+                            <span class="contact-icon"><i class="{{ $social['icon'] }}"></i></span>
+                            <span><small>{{ $social['name'] }}</small><strong>Pendiente de configurar</strong></span>
+                        </span>
+                    @endif
+                @endforeach
                 @if(!empty($contact['whatsapp']))
                     <a class="contact-link" href="https://wa.me/{{ $contact['whatsapp'] }}" target="_blank" rel="noopener">
                         <span class="contact-icon"><i class="fa-brands fa-whatsapp"></i></span>
