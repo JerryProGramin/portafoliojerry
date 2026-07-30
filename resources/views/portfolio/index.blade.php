@@ -4,6 +4,11 @@
 <div class="page">
     <div class="intro-screen">
     <section class="hero-min" id="inicio">
+        <div class="hero-media">
+            <div class="avatar">
+                <img src="{{ asset('img/henry.webp') }}" alt="Henry Sánchez" width="200" height="200">
+            </div>
+        </div>
         <div class="hero-text">
             <p class="kicker">Backend | Web Developer</p>
             <h2 class="sub">Bienvenido</h2>
@@ -13,16 +18,9 @@
                 soluciones web y móviles con PHP, JavaScript, Java, Python, Dart y MySQL.
             </p>
             <div class="hero-actions">
-                <a class="btn" href="#proyectos"><i class="fa-regular fa-folder-open"></i> Ver proyectos</a>
-                <a class="btn" href="#contacto"><i class="fa-regular fa-message"></i> Contactar</a>
                 <a class="btn" href="{{ asset('docs/HenrySanchezChinguelCV.pdf') }}" target="_blank" rel="noopener">
                     <i class="fa-regular fa-file-pdf"></i> Ver CV
                 </a>
-            </div>
-        </div>
-        <div class="hero-media">
-            <div class="avatar">
-                <img src="{{ asset('img/henry.webp') }}" alt="Henry Sánchez" width="200" height="200">
             </div>
         </div>
     </section>

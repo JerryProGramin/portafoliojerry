@@ -12,10 +12,10 @@
     /* Theme */
     color-scheme: light;
     --bg: #f4f9fc;
-    --panel: #ffffff;
-    --card: #ffffff;
-    --surface: #edf6fa;
-    --surface-hover: #e0f2f7;
+    --panel: rgba(248, 252, 255, .88);
+    --card: rgba(248, 252, 255, .91);
+    --surface: rgba(226, 241, 248, .76);
+    --surface-hover: rgba(207, 235, 246, .88);
 
     --text: #102a43;
     --muted: #5f7489;
@@ -23,9 +23,10 @@
 
     --accent: #087ea4;
     --accent-2: #0f9f9a;
+    --accent-3: #7157c8;
     --accent-soft: rgba(8, 126, 164, .11);
 
-    --shadow: 0 20px 55px rgba(24, 73, 96, .11);
+    --shadow: 0 22px 60px rgba(8, 35, 58, .18);
     --radius: 18px;
     --radius-sm: 12px;
 }
@@ -33,15 +34,16 @@
 html[data-theme="dark"] {
     color-scheme: dark;
     --bg: #071827;
-    --panel: #0d2638;
-    --card: #102d42;
-    --surface: #13354a;
-    --surface-hover: #17435a;
+    --panel: rgba(8, 24, 42, .82);
+    --card: rgba(11, 29, 50, .88);
+    --surface: rgba(21, 48, 70, .76);
+    --surface-hover: rgba(28, 65, 88, .88);
     --text: #edf8fc;
     --muted: #a8becb;
     --border: rgba(154, 211, 224, .16);
     --accent: #38bdf8;
     --accent-2: #2dd4bf;
+    --accent-3: #a78bfa;
     --accent-soft: rgba(56, 189, 248, .12);
     --shadow: 0 24px 65px rgba(0, 8, 18, .38);
 }
@@ -63,17 +65,15 @@ body {
 html {
     scroll-behavior: smooth;
     background:
-        radial-gradient(circle at 18% 8%, rgba(56, 189, 248, .12), transparent 32%),
-        radial-gradient(circle at 86% 35%, rgba(45, 212, 191, .10), transparent 28%),
-        var(--bg);
+        linear-gradient(rgba(235, 246, 251, .58), rgba(235, 246, 251, .58)),
+        url("../img/universe-portfolio.png") center / cover no-repeat;
     background-attachment: fixed;
 }
 
 html[data-theme="dark"] {
     background:
-        radial-gradient(circle at 18% 8%, rgba(14, 116, 144, .22), transparent 34%),
-        radial-gradient(circle at 82% 32%, rgba(15, 118, 110, .16), transparent 30%),
-        var(--bg);
+        linear-gradient(rgba(2, 10, 20, .30), rgba(2, 10, 20, .30)),
+        url("../img/universe-portfolio.png") center / cover no-repeat;
     background-attachment: fixed;
 }
 
@@ -125,6 +125,7 @@ main>* {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    backdrop-filter: blur(18px) saturate(125%);
 }
 
 /* =========================================================
@@ -156,16 +157,11 @@ p {
    HERO (HOME)
 ========================================================= */
 .hero-min {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-
     display: grid;
-    grid-template-columns: 1.35fr 0.65fr;
-    gap: 32px;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 48px;
     align-items: center;
-    padding: 40px 24px;
+    padding: 30px 0 42px;
 }
 
 .hero-text {
@@ -175,10 +171,13 @@ p {
 .hero-actions {
     margin-top: 28px;
     padding-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 12px;
     max-width: 700px;
+}
+
+.hero-actions .btn {
+    min-width: 150px;
 }
 
 .kicker {
@@ -243,11 +242,13 @@ p {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     transition: transform .18s ease, border-color .18s ease;
+    box-shadow: 0 14px 38px rgba(5, 25, 45, .10);
+    backdrop-filter: blur(16px) saturate(120%);
 }
 
 .card:hover {
     transform: translateY(-2px);
-    border-color: rgba(77, 163, 255, .35);
+    border-color: var(--accent-2);
 }
 
 .card-head {
@@ -368,8 +369,8 @@ main {
 }
 
 .btn-primary {
-    border-color: var(--accent);
-    background: var(--accent);
+    border-color: rgba(255, 255, 255, .18);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
     color: #ffffff;
 }
 
@@ -481,6 +482,7 @@ main {
     border-radius: 18px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
     z-index: 9999;
+    backdrop-filter: blur(18px) saturate(130%);
 }
 
 .navigation ul {
@@ -592,6 +594,7 @@ main {
     border-radius: 999px;
     background: var(--panel);
     box-shadow: var(--shadow);
+    backdrop-filter: blur(18px) saturate(130%);
 }
 
 .theme-switch button {
@@ -782,7 +785,7 @@ main {
     padding: 0 112px 0 28px;
     border-bottom: 1px solid var(--border);
     background: color-mix(in srgb, var(--panel) 92%, transparent);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px) saturate(135%);
 }
 
 .brand {
@@ -858,8 +861,8 @@ main {
 }
 
 .type-filter.active {
-    border-color: var(--accent);
-    background: var(--accent);
+    border-color: rgba(255, 255, 255, .18);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
     color: #ffffff;
 }
 
@@ -878,6 +881,7 @@ main {
     border-radius: var(--radius);
     background: var(--panel);
     box-shadow: var(--shadow);
+    backdrop-filter: blur(20px) saturate(130%);
 }
 
 .project-filter-panel h3 {
@@ -952,6 +956,7 @@ main {
     background: var(--panel);
     box-shadow: var(--shadow);
     transition: transform .2s ease, border-color .2s ease;
+    backdrop-filter: blur(18px) saturate(125%);
 }
 
 .project-card:hover {
@@ -963,9 +968,12 @@ main {
     display: grid;
     min-height: 118px;
     place-items: center;
-    background: var(--surface-hover);
-    color: var(--accent);
+    background:
+        radial-gradient(circle at 75% 20%, rgba(45, 212, 191, .30), transparent 34%),
+        linear-gradient(135deg, rgba(8, 126, 164, .32), rgba(113, 87, 200, .36));
+    color: #ffffff;
     font-size: 34px;
+    text-shadow: 0 0 24px rgba(56, 189, 248, .85);
 }
 
 .project-content {

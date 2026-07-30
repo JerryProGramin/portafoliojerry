@@ -36,7 +36,12 @@ final class PdoTechnologyRepository implements TechnologyRepository
             "SELECT t.name, t.slug, t.icon, t.category, t.category_order, t.sort_order
              FROM technologies t
              WHERE t.is_visible = 1
-               AND t.category IN ('Lenguajes', 'Frameworks y librerías', 'Bases de datos')
+               AND t.category IN (
+                   'Lenguajes',
+                   'Marcado y estilos',
+                   'Frameworks y librerías',
+                   'Bases de datos'
+               )
              ORDER BY t.category_order ASC, t.sort_order ASC, t.name ASC"
         );
 
